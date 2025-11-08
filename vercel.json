@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "installCommand": "npm install",
+  "buildCommand": "cd client && npm install && npm run build",
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ]
+}
+

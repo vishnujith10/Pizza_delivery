@@ -100,11 +100,20 @@
     "unpipe": "^1.0.0",
     "utils-merge": "^1.0.1",
     "uuid": "^10.0.0",
-    "vary": "^1.1.2"
+    "vary": "^1.1.2",
+    "cors": "^2.8.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "cd client && npm install && npm run build",
+    "dev": "nodemon server.js",
+    "client": "cd client && npm start",
+    "dev:full": "concurrently \"npm run dev\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.4"
   },
   "author": "",
   "license": "ISC"
