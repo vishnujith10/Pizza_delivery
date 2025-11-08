@@ -27,29 +27,40 @@ const fs = require('fs');
 // Determine build path
 let buildPath;
 if (isVercel) {
-    // On Vercel, try multiple possible locations
+    // On Vercel, the build files should be in the root build/ directory (copied by postbuild script)
     const possiblePaths = [
-        path.join(process.cwd(), 'client', 'build'),  // Vercel's outputDirectory location
-        path.join(__dirname, 'client', 'build'),
-        path.join(process.cwd(), '.vercel', 'output', 'static'),
-        path.join(__dirname, 'build')
+        path.join(__dirname, 'build'),  // Copied location (most likely)
+        path.join(process.cwd(), 'build'),
+        path.join(__dirname, 'client', 'build'),  // Original location
+        path.join(process.cwd(), 'client', 'build')
     ];
+    
+    console.log('Looking for build files. __dirname:', __dirname);
+    console.log('Looking for build files. process.cwd():', process.cwd());
     
     for (const possiblePath of possiblePaths) {
         try {
-            if (fs.existsSync(possiblePath) && fs.existsSync(path.join(possiblePath, 'index.html'))) {
-                buildPath = possiblePath;
-                console.log('Found build directory at:', buildPath);
-                break;
+            console.log('Checking path:', possiblePath);
+            if (fs.existsSync(possiblePath)) {
+                console.log('  - Directory exists');
+                if (fs.existsSync(path.join(possiblePath, 'index.html'))) {
+                    buildPath = possiblePath;
+                    console.log('✓ Found build directory at:', buildPath);
+                    break;
+                } else {
+                    console.log('  - But index.html not found');
+                }
+            } else {
+                console.log('  - Directory does not exist');
             }
         } catch (e) {
-            // Continue
+            console.log('  - Error checking path:', e.message);
         }
     }
     
     if (!buildPath) {
-        buildPath = path.join(process.cwd(), 'client', 'build');
-        console.log('Using default build path:', buildPath);
+        buildPath = path.join(__dirname, 'build');
+        console.log('⚠ Using default build path (may not exist):', buildPath);
     }
 } else {
     buildPath = path.join(__dirname, 'client', 'build');

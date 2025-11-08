@@ -27,10 +27,24 @@ function copyRecursiveSync(src, dest) {
 
 if (fs.existsSync(sourceDir)) {
     console.log('Copying build files from', sourceDir, 'to', destDir);
+    // Remove destination if it exists
+    if (fs.existsSync(destDir)) {
+        fs.rmSync(destDir, { recursive: true, force: true });
+    }
     copyRecursiveSync(sourceDir, destDir);
-    console.log('Build files copied successfully');
+    console.log('Build files copied successfully to', destDir);
+    
+    // Verify the copy
+    if (fs.existsSync(path.join(destDir, 'index.html'))) {
+        console.log('✓ index.html found in build directory');
+    } else {
+        console.error('✗ index.html NOT found in build directory');
+        process.exit(1);
+    }
 } else {
     console.error('Source build directory not found:', sourceDir);
+    console.error('Current directory:', __dirname);
+    console.error('Listing client directory:', fs.existsSync(path.join(__dirname, 'client')));
     process.exit(1);
 }
 
