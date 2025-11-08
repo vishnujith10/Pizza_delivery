@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "cd client && npm install && npm run build",
   "builds": [
     {
       "src": "api/index.js",
