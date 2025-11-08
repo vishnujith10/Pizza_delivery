@@ -28,13 +28,12 @@ const fs = require('fs');
 // Try multiple possible paths for the build directory
 let buildPath;
 if (isVercel) {
-    // On Vercel, the build files should be in the same directory as the serverless function
-    // Try different possible locations
+    // On Vercel, try build directory first (copied by postbuild script), then client/build
     const possiblePaths = [
-        path.join(__dirname, 'client', 'build'),  // Most likely location when included
-        path.join(process.cwd(), 'client', 'build'),
-        path.join(__dirname, 'build'),
-        path.join(process.cwd(), 'build')
+        path.join(__dirname, 'build'),  // Copied build files location
+        path.join(__dirname, 'client', 'build'),  // Original location
+        path.join(process.cwd(), 'build'),
+        path.join(process.cwd(), 'client', 'build')
     ];
     
     // Find the first path that exists
@@ -50,12 +49,13 @@ if (isVercel) {
         }
     }
     
-    // Default to __dirname/client/build if none found
+    // Default to __dirname/build if none found
     if (!buildPath) {
-        buildPath = path.join(__dirname, 'client', 'build');
+        buildPath = path.join(__dirname, 'build');
         console.log('Using default build path:', buildPath);
     }
 } else {
+    // Local development: use client/build
     buildPath = path.join(__dirname, 'client', 'build');
 }
 

@@ -11,7 +11,7 @@ yarn-error.log*
 
 # Build output
 dist/
-build/
+# build/ - commented out to allow Vercel deployment
 out/
 
 # IDE and editor files
