@@ -3,12 +3,14 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": "client/build/**"
-      }
+      "use": "@vercel/node"
     }
   ],
+  "functions": {
+    "server.js": {
+      "includeFiles": "client/build/**"
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",

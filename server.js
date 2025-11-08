@@ -23,23 +23,26 @@ const port = process.env.PORT || 5000;
 // Serve static files from the React app
 // Check if we're on Vercel (serverless) or local
 const isVercel = process.env.VERCEL === '1';
+const fs = require('fs');
+
 // Try multiple possible paths for the build directory
 let buildPath;
 if (isVercel) {
-    // On Vercel, try different possible locations
+    // On Vercel, the build files should be in the same directory as the serverless function
+    // Try different possible locations
     const possiblePaths = [
+        path.join(__dirname, 'client', 'build'),  // Most likely location when included
         path.join(process.cwd(), 'client', 'build'),
-        path.join(__dirname, 'client', 'build'),
-        path.join(process.cwd(), 'build'),
-        path.join(__dirname, 'build')
+        path.join(__dirname, 'build'),
+        path.join(process.cwd(), 'build')
     ];
     
     // Find the first path that exists
-    const fs = require('fs');
     for (const possiblePath of possiblePaths) {
         try {
-            if (fs.existsSync(possiblePath)) {
+            if (fs.existsSync(possiblePath) && fs.existsSync(path.join(possiblePath, 'index.html'))) {
                 buildPath = possiblePath;
+                console.log('Found build directory at:', buildPath);
                 break;
             }
         } catch (e) {
@@ -47,9 +50,10 @@ if (isVercel) {
         }
     }
     
-    // Default to process.cwd() if none found
+    // Default to __dirname/client/build if none found
     if (!buildPath) {
-        buildPath = path.join(process.cwd(), 'client', 'build');
+        buildPath = path.join(__dirname, 'client', 'build');
+        console.log('Using default build path:', buildPath);
     }
 } else {
     buildPath = path.join(__dirname, 'client', 'build');
