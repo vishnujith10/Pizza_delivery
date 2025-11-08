@@ -14,9 +14,9 @@ const pizzasRoute = require('../routes/pizzasRoute.js')
 const userRoute = require('../routes/userRoute.js')
 const ordersRoute = require('../routes/ordersRoute.js')
 
-app.use('/pizzas/', pizzasRoute)
-app.use('/user', userRoute)
-app.use('/orders', ordersRoute)
+app.use('/api/pizzas/', pizzasRoute)
+app.use('/api/user', userRoute)
+app.use('/api/orders', ordersRoute)
 
 // Export for Vercel serverless functions
 module.exports = app;
