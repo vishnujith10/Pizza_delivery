@@ -2,13 +2,15 @@
   "version": 2,
   "installCommand": "npm install && cd client && npm install",
   "buildCommand": "cd client && npm run build",
+  "functions": {
+    "server.js": {
+      "includeFiles": "client/build/**"
+    }
+  },
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": "client/build/**"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -22,4 +24,3 @@
     }
   ]
 }
-
