@@ -20,76 +20,24 @@ app.use('/api/orders', ordersRoute)
 
 const port = process.env.PORT || 5000;
 
-// Serve static files from the React app
+// Serve static files from the React app (for local development and non-Vercel hosting)
 const isVercel = process.env.VERCEL === '1';
-const fs = require('fs');
 
-// Determine build path
-let buildPath;
-if (isVercel) {
-    // On Vercel, the build files should be in the root build/ directory (copied by postbuild script)
-    const possiblePaths = [
-        path.join(__dirname, 'build'),  // Copied location (most likely)
-        path.join(process.cwd(), 'build'),
-        path.join(__dirname, 'client', 'build'),  // Original location
-        path.join(process.cwd(), 'client', 'build')
-    ];
+if (!isVercel) {
+    // Only serve static files when NOT on Vercel
+    const buildPath = path.join(__dirname, 'client', 'build');
     
-    console.log('Looking for build files. __dirname:', __dirname);
-    console.log('Looking for build files. process.cwd():', process.cwd());
-    
-    for (const possiblePath of possiblePaths) {
-        try {
-            console.log('Checking path:', possiblePath);
-            if (fs.existsSync(possiblePath)) {
-                console.log('  - Directory exists');
-                if (fs.existsSync(path.join(possiblePath, 'index.html'))) {
-                    buildPath = possiblePath;
-                    console.log('✓ Found build directory at:', buildPath);
-                    break;
-                } else {
-                    console.log('  - But index.html not found');
-                }
-            } else {
-                console.log('  - Directory does not exist');
-            }
-        } catch (e) {
-            console.log('  - Error checking path:', e.message);
-        }
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(buildPath));
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(buildPath, 'index.html'));
+        });
+    } else {
+        // Development mode
+        app.get("/", (req, res) => {
+            res.send("Server Working on port " + port);
+        });
     }
-    
-    if (!buildPath) {
-        buildPath = path.join(__dirname, 'build');
-        console.log('⚠ Using default build path (may not exist):', buildPath);
-    }
-} else {
-    buildPath = path.join(__dirname, 'client', 'build');
-}
-
-// Serve static files in production
-if (process.env.NODE_ENV === 'production' || isVercel) {
-    app.use(express.static(buildPath));
-    
-    // Catchall handler for React Router
-    app.get('*', (req, res) => {
-        const indexPath = path.join(buildPath, 'index.html');
-        if (fs.existsSync(indexPath)) {
-            res.sendFile(indexPath);
-        } else {
-            res.status(404).json({ 
-                message: 'React build not found',
-                buildPath: buildPath,
-                cwd: process.cwd(),
-                __dirname: __dirname,
-                vercel: isVercel
-            });
-        }
-    });
-} else {
-    // Development mode
-    app.get("/", (req, res) => {
-        res.send("Server Working on port " + port);
-    });
 }
 
 // Error handling middleware
