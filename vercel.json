@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "installCommand": "npm install && cd client && npm install",
-  "buildCommand": "cd client && npm run build",
   "builds": [
     {
       "src": "server.js",
