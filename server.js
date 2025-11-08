@@ -23,9 +23,37 @@ const port = process.env.PORT || 5000;
 // Serve static files from the React app
 // Check if we're on Vercel (serverless) or local
 const isVercel = process.env.VERCEL === '1';
-const buildPath = isVercel 
-    ? path.join(process.cwd(), 'client', 'build')
-    : path.join(__dirname, 'client', 'build');
+// Try multiple possible paths for the build directory
+let buildPath;
+if (isVercel) {
+    // On Vercel, try different possible locations
+    const possiblePaths = [
+        path.join(process.cwd(), 'client', 'build'),
+        path.join(__dirname, 'client', 'build'),
+        path.join(process.cwd(), 'build'),
+        path.join(__dirname, 'build')
+    ];
+    
+    // Find the first path that exists
+    const fs = require('fs');
+    for (const possiblePath of possiblePaths) {
+        try {
+            if (fs.existsSync(possiblePath)) {
+                buildPath = possiblePath;
+                break;
+            }
+        } catch (e) {
+            // Continue to next path
+        }
+    }
+    
+    // Default to process.cwd() if none found
+    if (!buildPath) {
+        buildPath = path.join(process.cwd(), 'client', 'build');
+    }
+} else {
+    buildPath = path.join(__dirname, 'client', 'build');
+}
 
 if (process.env.NODE_ENV === 'production' || isVercel) {
     // Serve static files
@@ -34,7 +62,20 @@ if (process.env.NODE_ENV === 'production' || isVercel) {
     // The "catchall" handler: for any request that doesn't
     // match one above, send back React's index.html file.
     app.get('*', (req, res) => {
-        res.sendFile(path.join(buildPath, 'index.html'));
+        const fs = require('fs');
+        const indexPath = path.join(buildPath, 'index.html');
+        
+        // Check if file exists before sending
+        if (fs.existsSync(indexPath)) {
+            res.sendFile(indexPath);
+        } else {
+            res.status(404).json({ 
+                message: 'React build not found. Please ensure the build completed successfully.',
+                buildPath: buildPath,
+                cwd: process.cwd(),
+                __dirname: __dirname
+            });
+        }
     });
 } else {
     // Root route for development

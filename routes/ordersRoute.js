@@ -5,16 +5,24 @@ const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
 if (!process.env.STRIPE_SECRET_KEY) {
-    console.error('STRIPE_SECRET_KEY is not defined in environment variables');
-    process.exit(1);
+    console.error('WARNING: STRIPE_SECRET_KEY is not defined in environment variables');
+    console.error('Payment functionality will not work. Please set STRIPE_SECRET_KEY in your environment variables.');
 }
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+const stripe = process.env.STRIPE_SECRET_KEY 
+    ? require("stripe")(process.env.STRIPE_SECRET_KEY)
+    : null;
 const Order = require('../models/orderModel');
 
 router.post("/placeorder", async (req, res) => {
     console.log("Received request to place order");
     const { token, subtotal, currentUser, cartItems } = req.body;
+
+    if (!stripe) {
+        return res.status(500).json({ 
+            message: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.' 
+        });
+    }
 
     try {
         console.log("Creating Stripe customer");
