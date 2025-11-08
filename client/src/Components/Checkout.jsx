@@ -28,7 +28,7 @@ export default function Checkout({subtotal}) {
             amount={subtotal*100}
             shippingAddress
             token={tokenHandler}
-            stripeKey={process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_51PrKHuL1kzVLHJCL3O2KA2Gqlmm948ItsG8kNgkKo8ljHjytdsmIRuXlJQu0kPzZaONDelbYKxxjUXcetTLaIowt00hOZJohpJ'}
+            stripeKey={process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}
             currency='INR'
             >
              

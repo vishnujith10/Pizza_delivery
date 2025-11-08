@@ -20,14 +20,21 @@ app.use('/api/orders', ordersRoute)
 
 const port = process.env.PORT || 5000;
 
-// Serve static files from the React app in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'client/build')));
+// Serve static files from the React app
+// Check if we're on Vercel (serverless) or local
+const isVercel = process.env.VERCEL === '1';
+const buildPath = isVercel 
+    ? path.join(process.cwd(), 'client', 'build')
+    : path.join(__dirname, 'client', 'build');
+
+if (process.env.NODE_ENV === 'production' || isVercel) {
+    // Serve static files
+    app.use(express.static(buildPath));
     
     // The "catchall" handler: for any request that doesn't
     // match one above, send back React's index.html file.
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+        res.sendFile(path.join(buildPath, 'index.html'));
     });
 } else {
     // Root route for development

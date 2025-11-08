@@ -3,7 +3,13 @@ const { message } = require("statuses");
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY || "sk_test_51PrKHuL1kzVLHJCLyUohkHDpzVRTBSTpideJUVAja67FG3ONDsgsBGlEfWm6Y3qQrllMnRHl7MmigNPsOvNa0sj400hRyndJ6u")
+
+if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('STRIPE_SECRET_KEY is not defined in environment variables');
+    process.exit(1);
+}
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 const Order = require('../models/orderModel');
 
 router.post("/placeorder", async (req, res) => {
