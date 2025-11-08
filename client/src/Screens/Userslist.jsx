@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../Components/Loading";
 import Error from "../Components/Error";
@@ -12,7 +12,7 @@ export default function Userslist() {
 
       dispatch(getAllUsers());
       
-    },[])
+    },[dispatch])
   
   return (
     <div className='adminlists'>

@@ -34,7 +34,7 @@ export default function Navbar() {
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
-                  href="#"
+                  href="/"
                   id="navbarDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
@@ -49,9 +49,9 @@ export default function Navbar() {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#" onClick={() => { dispatch(logoutUser()) }}>
+                    <button className="dropdown-item" style={{border: 'none', background: 'transparent', width: '100%', textAlign: 'left'}} onClick={() => { dispatch(logoutUser()) }}>
                       Logout
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </li>

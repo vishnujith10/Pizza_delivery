@@ -21,7 +21,7 @@ export default function Editpizza() {
   const { pizza, loading, error } = getpizzabyidstate;
 
   const editpizzastate = useSelector((state) => state.editPizzaReducer);
-  const { editsuccess, editerror } = editpizzastate || {};  // Provide fallback to an empty object
+  const { editsuccess } = editpizzastate || {};  // Provide fallback to an empty object
 
   useEffect(() => {
     if (pizzaid) {

@@ -18,7 +18,7 @@ export default function Registerscreen() {
     const dispatch = useDispatch();
 
     function validateEmail(email) {
-        const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+        const re = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
         return re.test(email);
     }
 

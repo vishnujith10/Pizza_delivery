@@ -1,6 +1,6 @@
 // Adminscreen.js
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Route, Routes, Link } from "react-router-dom";
 import Userslist from "./Userslist";
 import Orderslist from "./Orderslist";
@@ -11,7 +11,6 @@ import Editpizza from "./Editpizza";
 export default function Adminscreen() {
   const userstate = useSelector((state) => state.loginUserReducer);
   const { currentUser } = userstate;
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!currentUser?.isAdmin) {

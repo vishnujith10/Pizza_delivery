@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, deleteFromCart } from '../actions/cartActions';
-import trash from '../Images/delete.png'
 import Checkout from '../Components/Checkout';
 export default function Cartscreen() {
   const cartstate = useSelector(state => state.cartReducer);

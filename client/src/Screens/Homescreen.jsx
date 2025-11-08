@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPizzas } from "../actions/pizzaActions";
 import Pizza from "../Components/Pizza";
@@ -13,7 +13,7 @@ export default function Homescreen() {
 
   useEffect(() => {
     dispatch(getAllPizzas());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

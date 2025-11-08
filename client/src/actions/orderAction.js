@@ -61,9 +61,8 @@ export const getUserOrdersReducer=(state={orders:[]}, action)=>{
     }
 };
 
-export const getAllOrders =()=>async (dispatch,getState) =>{
+export const getAllOrders =()=>async (dispatch) =>{
 
-    const currentUser = getState().loginUserReducer.currentUser
     dispatch({type:'GET_ALLORDERS_REQUEST'});
 
     try {

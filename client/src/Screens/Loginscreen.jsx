@@ -16,8 +16,6 @@ export default function Loginscreen() {
     }
   });
 
-  const loginState = useSelector((state) => state.loginUserReducer || {});
-
   function login() {
     const user = { email, password };
     dispatch(loginUser(user));
